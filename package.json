@@ -1,10 +1,15 @@
 {
   "name": "decodable-js",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "publish": "npm publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pioner92/decodable-js"
   },
   "author": "Alex Shumihin",
   "license": "ISC"

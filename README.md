@@ -3,7 +3,7 @@
 ### Usage
 
 ```ts
-import {Decodable,T} from 'decodable-js';
+import Decodable, {T} from 'decodable-js';
 
 const SomeData = {
     name: T.string,
