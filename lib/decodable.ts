@@ -3,7 +3,8 @@ import {throwError} from './throw-error'
 export const Decodable = (
     data: Record<string, any>,
     struct: Record<string, any>,
-    enableConvert: boolean,
+    enableConvert: boolean = false,
+    enableThrowError:boolean = false,
 ) => {
     if (
         !data &&
@@ -19,7 +20,7 @@ export const Decodable = (
     return Object.keys(data).reduce<Record<string, any>>((acc, el) => {
         if (data[el] && typeof data[el] === 'object') {
             if (!Array.isArray(data[el])) {
-                const ob = Decodable(data[el], struct[el], enableConvert = false);
+                const ob = Decodable(data[el], struct[el], enableConvert, enableThrowError);
                 if (ob && typeof ob === 'object' && Object.keys(ob).length === 0) {
                     return acc;
                 }
@@ -31,7 +32,7 @@ export const Decodable = (
                         typeof element === 'object' &&
                         !Array.isArray(element)
                     ) {
-                        return Decodable(element, struct[el][0], enableConvert);
+                        return Decodable(element, struct[el][0], enableConvert, enableThrowError);
                     } else if (typeof element === struct[el][0]) {
                         return element;
                     } else if (
@@ -50,7 +51,9 @@ export const Decodable = (
                     ) {
                         return element.toString();
                     } else {
-                        throwError(el, `[${data[el]}]`, `Array<${struct[el]}>`)
+                        if(enableThrowError){
+                            throwError(el, `[${data[el]}]`, `Array<${struct[el]}>`)
+                        }
                     }
                 });
                 acc[el] = arr.every((e: any) => !!e) ? arr : [];
@@ -76,7 +79,7 @@ export const Decodable = (
         ) {
             acc[el] = data[el].toString();
         } else {
-            if (el in struct && el in data) {
+            if (enableThrowError && el in struct && el in data) {
                 throwError(el, data[el], struct[el]);
             }
         }

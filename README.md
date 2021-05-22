@@ -61,9 +61,10 @@ T.object
 ### Api
 
 ```ts
-const res = Decodable(data,struct,isConvert)
+const res = Decodable(data,struct,enableConvert,enableThrowError)
 ```
-#### data - JsonData
-#### sturct - Structure for conversion
-#### isConvert - Enables converting a string to a number or a number to a string (default = false)
+#### data: {} - JsonData
+#### sturct: {} - Structure for conversion
+#### enableConvert: boolean - Enables converting a string to a number or a number to a string (default = false)
+#### enableThrowError:boolean - Enable error throw (default = false)
 
