@@ -10,16 +10,15 @@ const SomeData = {
     address: T.string,
     age: T.number,
     visible: T.boolean,
+    enable:T.boolean,
     numbers: [T.string],
 }
 
 const jsonData = {
-    name: 'Alex',
     age: 12,
-    city: 'City',
     address: 'Address',
     visible: true,
-    ob: ['2', '2', '4'],
+    ob: ['2', 2, 2],
 }
 
 
@@ -30,9 +29,18 @@ const jsonData = {
 
 const res = Decodable(jsonData,User,true)
 // const res = {
-//   name:'Name',
-//   age:20,
-//   visible:true,
+//    age: 12,
+//    address: 'Address',
+//    visible: true,
+//    ob: ['2', '2', '2'],
+// }
+
+const res2 = Decodable(jsonData,User, false)
+// const res = {
+//    age: 12,
+//    address: 'Address',
+//    visible: true,
+//    ob: ['2'],
 // }
 
 
