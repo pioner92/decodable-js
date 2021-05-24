@@ -7,3 +7,16 @@ export const isType = (value: any, type: TTypes) => {
 export const getType = (value:any) => {
     return typeof value
 }
+
+export const isEqualTypes = (a:any,b:any) => {
+    return typeof a === typeof b
+}
+
+export const dataValidate = (data:{},name:string) => {
+    if(!data || !isType(data,'object')) {
+        throw new Error(`${name} is not object`)
+    }
+    else if(Object.keys(data).length === 0) {
+        throw new Error(`${name} is empty`)
+    }
+}
