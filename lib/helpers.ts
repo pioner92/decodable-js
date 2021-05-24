@@ -14,7 +14,7 @@ export const isEqualTypes = (a:any,b:any) => {
 
 export const dataValidate = (data:{},name:string) => {
     if(!data || !isType(data,'object')) {
-        throw new Error(`${name} is not object`)
+        throw new Error(`${name} is not object it is type "${data === null ? 'null' : getType(data)}"`)
     }
     else if(Object.keys(data).length === 0) {
         throw new Error(`${name} is empty`)
