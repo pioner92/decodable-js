@@ -1,8 +1,8 @@
 export const T = {
-    null: 'object',
-    undefined: 'undefined',
-    boolean: 'boolean',
-    number: 'number',
-    string: 'string',
-    object: 'object',
+    null: null,
+    undefined: undefined,
+    boolean: true,
+    number: 2,
+    string: '',
+    object: {},
 };

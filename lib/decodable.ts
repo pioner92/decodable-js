@@ -1,27 +1,41 @@
 import {throwError} from './throw-error'
+import {T} from './types';
 
-export const Decodable = (
+
+type TTypes = string | never | boolean | object | null | undefined;
+
+const isType = (value: any, type: TTypes) => {
+    return typeof value === type;
+};
+
+export const Decodable = <T extends { [key: string]: any }>(
     data: Record<string, any>,
-    struct: Record<string, any>,
+    struct: T,
     enableConvert: boolean = false,
     enableThrowError:boolean = false,
-) => {
+) :T => {
     if (
         !data &&
-        typeof data !== 'object' &&
+        !isType(data,'object') &&
         !Object.keys(data).length &&
         !struct &&
-        typeof struct !== 'object' &&
+        !isType(struct,'object') &&
         Object.keys(struct).length
     ) {
-        return;
+        throw new Error('Data or Structure is empty')
     }
 
-    return Object.keys(data).reduce<Record<string, any>>((acc, el) => {
-        if (data[el] && typeof data[el] === 'object') {
+    return Object.keys(struct).reduce<T>((acc, el) => {
+
+        if (!(el in data)) {
+            throw new Error(`Key "${el}" not found`)
+        }
+
+
+        if (data[el] && isType(data[el],'object')) {
             if (!Array.isArray(data[el])) {
                 const ob = Decodable(data[el], struct[el], enableConvert, enableThrowError);
-                if (ob && typeof ob === 'object' && Object.keys(ob).length === 0) {
+                if (ob && isType(ob,'object') && Object.keys(ob).length === 0) {
                     return acc;
                 }
                 acc[el] = ob;
@@ -29,16 +43,16 @@ export const Decodable = (
                 const arr = data[el].map((element: any) => {
                     if (
                         element &&
-                        typeof element === 'object' &&
+                        isType(element,'object') &&
                         !Array.isArray(element)
                     ) {
-                        return Decodable(element, struct[el][0], enableConvert, enableThrowError);
+                        return Decodable(element, struct[el][0] , enableConvert, enableThrowError);
                     } else if (typeof element === struct[el][0]) {
                         return element;
                     } else if (
                         enableConvert &&
-                        typeof element === 'string' &&
-                        struct[el][0] === 'number'
+                        isType(element,'string') &&
+                        isType(struct[el][0],'number')
                     ) {
                         if (Number.isNaN(+element)) {
                             return acc;
@@ -46,8 +60,8 @@ export const Decodable = (
                         return +element;
                     } else if (
                         enableConvert &&
-                        typeof element === 'number' &&
-                        struct[el][0] === 'string'
+                        isType(element,'number') &&
+                        isType(struct[el][0],'string')
                     ) {
                         return element.toString();
                     } else {
@@ -65,8 +79,9 @@ export const Decodable = (
             acc[el] = data[el];
         } else if (
             enableConvert &&
-            typeof data[el] === 'string' &&
-            struct[el] === 'number'
+            isType(data[el],'string')
+            &&
+            isType(struct[el],'number')
         ) {
             if (Number.isNaN(+data[el])) {
                 return acc;
@@ -74,15 +89,21 @@ export const Decodable = (
             acc[el] = +data[el];
         } else if (
             enableConvert &&
-            typeof data[el] === 'number' &&
-            struct[el] === 'string'
+            isType(data[el],'number') &&
+            isType(struct[el],'string')
         ) {
             acc[el] = data[el].toString();
         } else {
             if (enableThrowError && el in struct && el in data) {
                 throwError(el, data[el], struct[el]);
             }
+            else if( enableThrowError && !(el in struct) && !(el in data)) {
+                throw new Error('Нет данных ')
+            }
         }
         return acc;
-    }, {});
+    }, {} as T );
 };
+
+
+const res = Decodable({name:'Sas',age:12},{name:T.number,age:T.string})

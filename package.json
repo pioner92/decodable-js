@@ -1,11 +1,11 @@
 {
   "name": "decodable-js",
-  "version": "1.0.8",
+  "version": "1.0.10",
   "description": "",
   "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "publish": "npm publish"
+    "publish": "npm version patch && npm publish"
   },
   "repository": {
     "type": "git",
