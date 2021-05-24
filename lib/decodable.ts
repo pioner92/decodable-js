@@ -104,6 +104,3 @@ export const Decodable = <T extends { [key: string]: any }>(
         return acc;
     }, {} as T );
 };
-
-
-const res = Decodable({name:'Sas',age:12},{name:T.number,age:T.string})
