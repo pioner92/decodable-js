@@ -1,12 +1,6 @@
 import {throwError} from './throw-error'
-import {T} from './types';
+import {isType,getType} from './helpers'
 
-
-type TTypes = string | never | boolean | object | null | undefined;
-
-const isType = (value: any, type: TTypes) => {
-    return typeof value === type;
-};
 
 export const Decodable = <T extends { [key: string]: any }>(
     data: Record<string, any>,
