@@ -97,9 +97,6 @@ export const Decodable = <T extends { [key: string]: any }>(
             if (enableThrowError && el in struct && el in data) {
                 throwError(el, data[el], struct[el]);
             }
-            else if( enableThrowError && !(el in struct) && !(el in data)) {
-                throw new Error('Нет данных ')
-            }
         }
         return acc;
     }, {} as T );

@@ -1,8 +1,8 @@
 export declare const T: {
-    null: string;
-    undefined: string;
-    boolean: string;
-    number: string;
+    null: null;
+    undefined: undefined;
+    boolean: boolean;
+    number: number;
     string: string;
-    object: string;
+    object: {};
 };
