@@ -38,7 +38,7 @@ export const Decodable = <T extends { [key: string]: any }>(
                 if (ob && isType(ob,'object') && Object.keys(ob).length === 0) {
                     return acc;
                 }
-                acc[el] = ob;
+                acc[el as keyof typeof struct] = ob;
             } else {
                 const arr = data[el].map((element: any) => {
                     if (
