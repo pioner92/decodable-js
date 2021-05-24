@@ -1,5 +1,5 @@
 import {throwError} from './throw-error'
-import {isType,getType} from './helpers'
+import {isType} from './helpers';
 
 
 export const Decodable = <T extends { [key: string]: any }>(
@@ -64,12 +64,14 @@ export const Decodable = <T extends { [key: string]: any }>(
                         }
                     }
                 });
+                //@ts-ignore
                 acc[el] = arr.every((e: any) => !!e) ? arr : [];
                 return acc;
             }
         }
 
         if (typeof data[el] === struct[el]) {
+            //@ts-ignore
             acc[el] = data[el];
         } else if (
             enableConvert &&
@@ -80,12 +82,14 @@ export const Decodable = <T extends { [key: string]: any }>(
             if (Number.isNaN(+data[el])) {
                 return acc;
             }
+            //@ts-ignore
             acc[el] = +data[el];
         } else if (
             enableConvert &&
             isType(data[el],'number') &&
             isType(struct[el],'string')
         ) {
+            //@ts-ignore
             acc[el] = data[el].toString();
         } else {
             if (enableThrowError && el in struct && el in data) {
