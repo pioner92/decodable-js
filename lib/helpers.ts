@@ -1,3 +1,5 @@
+import {DataNames} from './decodable';
+
 type TTypes = string | never | boolean | object | null | undefined;
 
 export const isType = (value: any, type: TTypes) => {
@@ -21,8 +23,10 @@ export const dataValidate = (data:{},name:string) => {
     }
 }
 
-export const isArray = (data:Array<any>) => {
-    if(isType(data,'object') && Array.isArray(data)) {
-       return true
-    }
+export const createTypeString = (type:any) => {
+    return `${type === null ? null : typeof type}`
+}
+
+export const createArrayTypeString = (type:any) => {
+    return `Array<${createTypeString(type)}>`
 }

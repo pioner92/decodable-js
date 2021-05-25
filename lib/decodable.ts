@@ -1,30 +1,35 @@
 import {throwError} from './throw-error'
-import {dataValidate, isEqualTypes, isType} from './helpers';
+import {createArrayTypeString, createTypeString, dataValidate, isEqualTypes, isType} from './helpers';
 
+export type K<T> = (Record<keyof T, any>) | Array<Record<keyof T, any>>
 
-export const Decodable = <T extends (Record<keyof T, any>) | Array<Record<keyof T, any>>>(
+export enum DataNames {
+    data = 'Data',
+    struct = 'Struct'
+}
+
+export const Decodable = <T extends K<T>>(
     data: T,
     struct: T,
     enableConvert: boolean = false,
     enableThrowError: boolean = true,
 ): T => {
-    dataValidate(data, 'Data')
-    dataValidate(struct, 'Structure')
+    dataValidate(data, DataNames.data)
+    dataValidate(struct, DataNames.struct)
 
-    if (isType(data, 'object') && Array.isArray(data)) {
-        if (isType(struct, 'object') && Array.isArray(struct)) {
-            return data.map((el) => Decodable(el, struct[0], enableConvert, enableThrowError)) as T
-        } else {
-            throw new Error(`Data is Array but Struct not is Array`)
-        }
+
+    if (Array.isArray(data) && !Array.isArray(struct)) {
+        throw new Error(`${DataNames.struct} is not Array but ${DataNames.data} is Array`)
+    } else if (!Array.isArray(data) && Array.isArray(struct)) {
+        throw new Error(`${DataNames.data} is not Array but ${DataNames.struct} is Array`)
+    } else if (Array.isArray(data) && Array.isArray(struct)) {
+        return data.map((el) => Decodable(el, struct[0], enableConvert, enableThrowError)) as T
     }
-    else if(isType(struct,'object') && Array.isArray(struct) && !Array.isArray(data)) {
-        throw new Error(`Data is not Array but Struct is Array`)
-    }
+
 
     const arr = Object.keys(struct) as [keyof typeof struct]
 
-    return arr.reduce((acc, el ) => {
+    return arr.reduce((acc, el) => {
 
         if (!(el in data)) {
             throw new Error(`Key "${el}" not found`)
@@ -65,7 +70,9 @@ export const Decodable = <T extends (Record<keyof T, any>) | Array<Record<keyof 
                         return element.toString();
                     } else {
                         if (enableThrowError) {
-                            throwError(el.toString(), `[${data[el]}]`, `Array<${struct[el]}>`)
+                            const currentType = createArrayTypeString(element)
+                            const expectedType = createArrayTypeString(struct[el][0])
+                            throwError(el.toString(), `[${data[el]}]`, currentType, expectedType)
                         }
                     }
                 });
@@ -95,9 +102,10 @@ export const Decodable = <T extends (Record<keyof T, any>) | Array<Record<keyof 
             acc[el] = data[el].toString();
         } else {
             if (enableThrowError && el in struct && el in data) {
-                throwError(el.toString(), data[el], struct[el]);
+                throwError(el.toString(), data[el], createTypeString(data[el]), createTypeString(struct[el]));
             }
         }
         return acc;
     }, {} as T);
 };
+
