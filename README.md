@@ -3,6 +3,14 @@
 
 #### Checks types in json data, if there is no match, raises an error at will, or ignores this field, Also, selects only the desired data
 #### It is possible to enable converting strings to number and number to string
+
+### Install
+```bash
+yarn add decodable-js
+# or
+npm install decodable-js
+```
+
 ### Usage
 
 ```ts
@@ -50,9 +58,6 @@ const res2 = Decodable(jsonData,JsonStruct, false)
 //    visible: true,
 //    ob: ['2'],
 // }
-
-
-
 ```
 
 ### Types
@@ -76,3 +81,5 @@ const res = Decodable(data,struct,enableConvert,enableThrowError)
 #### enableConvert: boolean - Enables converting a string to a number or a number to a string (default = false)
 #### enableThrowError:boolean - Enable error throw (default = false)
 
+### Author 
+#### ● Alex Shumihin
