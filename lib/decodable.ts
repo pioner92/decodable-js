@@ -7,7 +7,7 @@ export const Decodable = <T extends { [key: string]: any }>(
     struct: T,
     enableConvert: boolean = false,
     enableThrowError: boolean = true,
-): T | T[] => {
+): T => {
     dataValidate(data, 'Data')
     dataValidate(struct, 'Structure')
 
