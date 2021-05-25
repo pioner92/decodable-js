@@ -95,11 +95,21 @@ const res2 = Decodable(jsonData, JsonStruct, false)
 
 ```ts
 T.string
+T.string_$ // optional
+
 T.number
+T.number_$ // optional
+
 T.boolean
+T.boolean_$ // optional
+
 T.undefined
-T.null
+
+T.null 
+T.null_$ // optional
+
 T.object
+T.object_$ // optional
 ```
 
 ### Api

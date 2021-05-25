@@ -30,3 +30,7 @@ export const createTypeString = (type:any) => {
 export const createArrayTypeString = (type:any) => {
     return `Array<${createTypeString(type)}>`
 }
+
+export const isOptional = (struct:Array<any>) => {
+    return Array.isArray(struct) && struct.length === 2 && struct[1] === undefined
+}

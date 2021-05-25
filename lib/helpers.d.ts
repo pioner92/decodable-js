@@ -5,4 +5,5 @@ export declare const isEqualTypes: (a: any, b: any) => boolean;
 export declare const dataValidate: (data: {}, name: string) => void;
 export declare const createTypeString: (type: any) => string;
 export declare const createArrayTypeString: (type: any) => string;
+export declare const isOptional: (struct: Array<any>) => boolean;
 export {};

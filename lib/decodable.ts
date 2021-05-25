@@ -1,5 +1,5 @@
 import {throwError} from './throw-error'
-import {createArrayTypeString, createTypeString, dataValidate, isEqualTypes, isType} from './helpers';
+import {createArrayTypeString, createTypeString, dataValidate, isEqualTypes, isOptional, isType} from './helpers';
 
 export type K<T> = (Record<keyof T, any>) | Array<Record<keyof T, any>>
 
@@ -8,8 +8,8 @@ export enum DataNames {
     struct = 'Struct'
 }
 
-export const Decodable = <T extends K<T>>(
-    data: T,
+export const Decodable = <T extends K<T>,M extends T>(
+    data: M,
     struct: T,
     enableConvert: boolean = false,
     enableThrowError: boolean = true,
@@ -31,7 +31,7 @@ export const Decodable = <T extends K<T>>(
 
     return arr.reduce((acc, el) => {
 
-        if (!(el in data)) {
+        if (!(el in data) && !isOptional(struct[el]) && enableThrowError) {
             throw new Error(`Key "${el}" not found`)
         }
 
@@ -81,7 +81,22 @@ export const Decodable = <T extends K<T>>(
             }
         }
 
-        if (isEqualTypes(data[el], struct[el])) {
+
+        // IF OPTIONAL
+
+        if(isOptional(struct[el])) {
+            if(!(el in data)) {
+                return acc
+            }
+            else if(el in data && isEqualTypes(data[el],struct[el][0])) {
+                acc[el] = data[el]
+            }
+            else {
+                throwError(el.toString(), data[el], createTypeString(data[el]), `${createTypeString(struct[el][0])} of ${createTypeString(struct[el][1])}`);
+            }
+        }
+
+        else if (isEqualTypes(data[el], struct[el])) {
             acc[el] = data[el];
         } else if (
             enableConvert &&
@@ -108,4 +123,5 @@ export const Decodable = <T extends K<T>>(
         return acc;
     }, {} as T);
 };
+
 

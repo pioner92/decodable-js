@@ -3,4 +3,4 @@ export declare enum DataNames {
     data = "Data",
     struct = "Struct"
 }
-export declare const Decodable: <T extends K<T>>(data: T, struct: T, enableConvert?: boolean, enableThrowError?: boolean) => T;
+export declare const Decodable: <T extends K<T>, M extends T>(data: M, struct: T, enableConvert?: boolean, enableThrowError?: boolean) => T;
