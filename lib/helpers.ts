@@ -20,3 +20,9 @@ export const dataValidate = (data:{},name:string) => {
         throw new Error(`${name} is empty`)
     }
 }
+
+export const isArray = (data:Array<any>) => {
+    if(isType(data,'object') && Array.isArray(data)) {
+       return true
+    }
+}

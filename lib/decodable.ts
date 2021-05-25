@@ -7,9 +7,20 @@ export const Decodable = <T extends { [key: string]: any }>(
     struct: T,
     enableConvert: boolean = false,
     enableThrowError: boolean = false,
-): T => {
-        dataValidate(data,'Data')
-        dataValidate(struct,'Structure')
+): T | T[] => {
+    dataValidate(data, 'Data')
+    dataValidate(struct, 'Structure')
+
+    if (isType(data, 'object') && Array.isArray(data)) {
+        if (isType(struct, 'object') && Array.isArray(struct)) {
+            return data.map((el) => Decodable(el, struct[0], enableConvert, enableThrowError))
+        } else {
+            throw new Error(`Data is Array but Struct not is Array`)
+        }
+    }
+    else if(isType(struct,'object') && Array.isArray(struct) && !Array.isArray(data)) {
+        throw new Error(`Data is not Array but Struct is Array`)
+    }
 
     return Object.keys(struct).reduce<T>((acc, el) => {
 
