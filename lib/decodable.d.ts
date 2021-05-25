@@ -1,3 +1,1 @@
-export declare const Decodable: <T extends {
-    [key: string]: any;
-}>(data: Record<string, any>, struct: T, enableConvert?: boolean, enableThrowError?: boolean) => T;
+export declare const Decodable: <T extends Record<keyof T, any> | Record<keyof T, any>[]>(data: T, struct: T, enableConvert?: boolean, enableThrowError?: boolean) => T;
