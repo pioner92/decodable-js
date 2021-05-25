@@ -114,7 +114,7 @@ const res = Decodable(data, struct, enableConvert, enableThrowError)
 
 #### enableConvert: boolean - Enables converting a string to a number or a number to a string (default = false)
 
-#### enableThrowError:boolean - Enable error throw (default = false)
+#### enableThrowError:boolean - Enable error throw (default = true)
 
 ### Author
 
