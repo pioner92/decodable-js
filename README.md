@@ -1,10 +1,13 @@
 # Decodable js
+
 ### Library decodes json data similar to Swift
 
 #### Checks types in json data, if there is no match, raises an error at will, or ignores this field, Also, selects only the desired data
+
 #### It is possible to enable converting strings to number and number to string
 
 ### Install
+
 ```bash
 yarn add decodable-js
 # or
@@ -26,6 +29,34 @@ import {Decodable, T} from 'decodable-js';
 //     n:T.null
 // }
 
+
+// if response is Array
+
+const JsonStructArray = [
+    {
+        age: T.number,
+        address: T.string,
+        visible: T.boolean,
+        numbers: [T.string],
+    }
+]
+
+const jsonDataArray = [
+    {
+        age: 12,
+        address: 'Address',
+        visible: true,
+        number: '11111111',
+        enable: true,
+        someText: 'TEXT',
+        ob: ['2', 2, 2],
+    }
+]
+
+// ------------------------
+
+// if response is object
+
 const JsonStruct = {
     age: T.number,
     address: T.string,
@@ -39,11 +70,11 @@ const jsonData = {
     visible: true,
     number: '11111111',
     enable: true,
-    someText:'TEXT',
+    someText: 'TEXT',
     ob: ['2', 2, 2],
 }
 
-const res = Decodable(jsonData,JsonStruct,true)
+const res = Decodable(jsonData, JsonStruct, true)
 // const res = {
 //    age: 12,
 //    address: 'Address',
@@ -51,7 +82,7 @@ const res = Decodable(jsonData,JsonStruct,true)
 //    ob: ['2', '2', '2'],
 // }
 
-const res2 = Decodable(jsonData,JsonStruct, false)
+const res2 = Decodable(jsonData, JsonStruct, false)
 // const res = {
 //    age: 12,
 //    address: 'Address',
@@ -74,12 +105,17 @@ T.object
 ### Api
 
 ```ts
-const res = Decodable(data,struct,enableConvert,enableThrowError)
+const res = Decodable(data, struct, enableConvert, enableThrowError)
 ```
-#### data: {} - JsonData
-#### sturct: {} - Structure for conversion
+
+#### data: {} | Array<any> - JsonData
+
+#### sturct: {} | Array<any> - Structure for conversion
+
 #### enableConvert: boolean - Enables converting a string to a number or a number to a string (default = false)
+
 #### enableThrowError:boolean - Enable error throw (default = false)
 
-### Author 
+### Author
+
 #### ● Alex Shumihin
