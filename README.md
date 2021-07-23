@@ -115,12 +115,14 @@ T.object_$ // optional
 ### Api
 
 ```ts
-const res = Decodable(data, struct, enableConvert, enableThrowError)
+const res = Decodable(data, struct, name, enableConvert, enableThrowError)
 ```
 
 #### data: {} | Array<any> - JsonData
 
 #### sturct: {} | Array<any> - Structure for conversion
+
+### name :string - method name
 
 #### enableConvert: boolean - Enables converting a string to a number or a number to a string (default = false)
 

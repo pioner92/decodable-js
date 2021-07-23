@@ -11,6 +11,7 @@ export enum DataNames {
 export const Decodable = <T extends K<T>,M extends T>(
     data: M,
     struct: T,
+    name: string = '',
     enableConvert: boolean = false,
     enableThrowError: boolean = true,
 ): T => {
@@ -23,7 +24,7 @@ export const Decodable = <T extends K<T>,M extends T>(
     } else if (!Array.isArray(data) && Array.isArray(struct)) {
         throw new Error(`${DataNames.data} is not Array but ${DataNames.struct} is Array`)
     } else if (Array.isArray(data) && Array.isArray(struct)) {
-        return data.map((el) => Decodable(el, struct[0], enableConvert, enableThrowError)) as T
+        return data.map((el) => Decodable(el, struct[0],name, enableConvert, enableThrowError)) as T
     }
 
 
@@ -38,7 +39,7 @@ export const Decodable = <T extends K<T>,M extends T>(
 
         if (data[el] && isType(data[el], 'object')) {
             if (!Array.isArray(data[el])) {
-                const ob = Decodable(data[el], struct[el], enableConvert, enableThrowError);
+                const ob = Decodable(data[el], struct[el],name, enableConvert, enableThrowError);
                 if (ob && isType(ob, 'object') && Object.keys(ob).length === 0) {
                     return acc;
                 }
@@ -50,7 +51,7 @@ export const Decodable = <T extends K<T>,M extends T>(
                         isType(element, 'object') &&
                         !Array.isArray(element)
                     ) {
-                        return Decodable(element, struct[el][0], enableConvert, enableThrowError);
+                        return Decodable(element, struct[el][0],name, enableConvert, enableThrowError);
                     } else if (isEqualTypes(element, struct[el][0])) {
                         return element;
                     } else if (
