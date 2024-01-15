@@ -1,11 +1,3 @@
-// export const T = {
-//     null: null,
-//     undefined: undefined,
-//     boolean: true,
-//     number: 2,
-//     string: '',
-//     object: {},
-// };
 
 export class T {
     static number = 1
@@ -20,9 +12,9 @@ export class T {
     static null_$ = T.optional(T.null)
     static object_$ = T.optional(T.object)
 
-    static optional<T>(type:T) :T | undefined {
+    static optional<T>(type: T): T | undefined {
         //@ts-ignore
-        return [type,undefined]
+        return [type, undefined]
     }
 }
 

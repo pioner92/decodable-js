@@ -1,5 +1,5 @@
-import {throwError} from './throw-error'
-import {createArrayTypeString, createTypeString, dataValidate, isEqualTypes, isOptional, isType} from './helpers';
+import { throwError } from './throw-error'
+import { createArrayTypeString, createTypeString, dataValidate, isEqualTypes, isOptional, isType } from './helpers';
 
 export type K<T> = (Record<keyof T, any>) | Array<Record<keyof T, any>>
 
@@ -8,12 +8,29 @@ export enum DataNames {
     struct = 'Struct'
 }
 
-export const Decodable = <T extends K<T>,M extends T>(
-    data: M,
-    struct: T,
-    name: string = '',
-    enableConvert: boolean = false,
-    enableThrowError: boolean = true,
+
+/**
+ * Decodes the provided data into the specified structure.
+ *
+ * @param {Object|Array} data - The input data to decode, which can be either an object or an array.
+ * @param {Object|Array} struct - The structure to which you want to decode the input data. 
+ * @param {boolean} enableConvert - A flag that indicates whether to attempt type conversion between 
+ *                                  numbers and strings. If `true` and the input data contains a value
+ *                                  as a string but the expected type in 'struct' is a number, it will
+ *                                  convert the string to a number, and vice versa. If the conversion
+ *                                  cannot be performed, the value will be skipped.
+ * @param {boolean} silentMode - A flag that determines whether to throw an error if the input 
+ *                                     data does not match the structure. If `false`, the function will
+ *                                     operate in 'silent' mode, attempting conversions where possible.
+ * @returns {Object|Array} The decoded data structured according to 'struct'.
+ */
+export const decodable = <T extends K<T>, M extends T>(
+    { data, struct, enableConvert = false, silentMode = false }: {
+        data: M,
+        struct: T,
+        enableConvert: boolean,
+        silentMode: boolean,
+    }
 ): T => {
     dataValidate(data, DataNames.data)
     dataValidate(struct, DataNames.struct)
@@ -24,7 +41,7 @@ export const Decodable = <T extends K<T>,M extends T>(
     } else if (!Array.isArray(data) && Array.isArray(struct)) {
         throw new Error(`${DataNames.data} is not Array but ${DataNames.struct} is Array`)
     } else if (Array.isArray(data) && Array.isArray(struct)) {
-        return data.map((el) => Decodable(el, struct[0],name, enableConvert, enableThrowError)) as T
+        return data.map((el) => decodable({ data: el, struct: struct[0], enableConvert, silentMode })) as T
     }
 
 
@@ -32,14 +49,14 @@ export const Decodable = <T extends K<T>,M extends T>(
 
     return arr.reduce((acc, el) => {
 
-        if (!(el in data) && !isOptional(struct[el]) && enableThrowError) {
+        if (!(el in data) && !isOptional(struct[el]) && !silentMode) {
             throw new Error(`Key "${el}" not found`)
         }
 
 
         if (data[el] && isType(data[el], 'object')) {
             if (!Array.isArray(data[el])) {
-                const ob = Decodable(data[el], struct[el],name, enableConvert, enableThrowError);
+                const ob = decodable({ data: data[el], struct: struct[el], enableConvert, silentMode });
                 if (ob && isType(ob, 'object') && Object.keys(ob).length === 0) {
                     return acc;
                 }
@@ -51,7 +68,7 @@ export const Decodable = <T extends K<T>,M extends T>(
                         isType(element, 'object') &&
                         !Array.isArray(element)
                     ) {
-                        return Decodable(element, struct[el][0],name, enableConvert, enableThrowError);
+                        return decodable({ data: element, struct: struct[el][0], enableConvert, silentMode });
                     } else if (isEqualTypes(element, struct[el][0])) {
                         return element;
                     } else if (
@@ -70,7 +87,7 @@ export const Decodable = <T extends K<T>,M extends T>(
                     ) {
                         return element.toString();
                     } else {
-                        if (enableThrowError) {
+                        if (!silentMode) {
                             const currentType = createArrayTypeString(element)
                             const expectedType = createArrayTypeString(struct[el][0])
                             throwError(el.toString(), `[${data[el]}]`, currentType, expectedType)
@@ -85,11 +102,11 @@ export const Decodable = <T extends K<T>,M extends T>(
 
         // IF OPTIONAL
 
-        if(isOptional(struct[el])) {
-            if(!(el in data)) {
+        if (isOptional(struct[el])) {
+            if (!(el in data)) {
                 return acc
             }
-            else if(el in data && isEqualTypes(data[el],struct[el][0])) {
+            else if (el in data && isEqualTypes(data[el], struct[el][0])) {
                 acc[el] = data[el]
             }
             else {
@@ -117,7 +134,7 @@ export const Decodable = <T extends K<T>,M extends T>(
         ) {
             acc[el] = data[el].toString();
         } else {
-            if (enableThrowError && el in struct && el in data) {
+            if (!silentMode && el in struct && el in data) {
                 throwError(el.toString(), data[el], createTypeString(data[el]), createTypeString(struct[el]));
             }
         }

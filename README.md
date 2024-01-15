@@ -1,133 +1,106 @@
-# Decodable js
+# decodable-js
 
-### Library decodes json data similar to Swift
+## Overview
+`decodable-js` is a JavaScript library inspired by Swift's approach to JSON decoding. It verifies the types within JSON data, and based on configuration, can either raise an error for type mismatches or ignore the misaligned fields. It also allows selective data extraction and offers the option to convert between strings and numbers and vice versa.
 
-#### Checks types in json data, if there is no match, raises an error at will, or ignores this field, Also, selects only the desired data
+## Installation
 
-#### It is possible to enable converting strings to number and number to string
-
-### Install
+To integrate `decodable-js` into your project, run one of the following commands:
 
 ```bash
+# If you use yarn:
 yarn add decodable-js
-# or
+
+# Or if you prefer npm:
 npm install decodable-js
 ```
 
-### Usage
+## Usage
 
-```ts
-import {Decodable, T} from 'decodable-js';
+Here's how you can use `decodable-js` in your project:
 
+```typescript
+import { decodable, T } from 'decodable-js';
 
-// const EXAMPLE = {
-//     age: T.number,
-//     address: T.string,
-//     visible: T.boolean,
-//     numbers: [T.string],
-//     object:{name:T.string,age:T.number},
-//     n:T.null
-// }
-
-
-// if response is Array
-
-const JsonStructArray = [
-    {
-        age: T.number,
-        address: T.string,
-        visible: T.boolean,
-        numbers: [T.string],
-    }
-]
-
-const jsonDataArray = [
-    {
-        age: 12,
-        address: 'Address',
-        visible: true,
-        number: '11111111',
-        enable: true,
-        someText: 'TEXT',
-        ob: ['2', 2, 2],
-    }
-]
-
-// ------------------------
-
-// if response is object
-
+// Define your JSON structure
 const JsonStruct = {
     age: T.number,
     address: T.string,
     visible: T.boolean,
     numbers: [T.string],
+    // Add more fields as required
 }
 
+// Your JSON data
 const jsonData = {
     age: 12,
-    address: 'Address',
+    address: '123 Cherry Lane',
     visible: true,
-    number: '11111111',
-    enable: true,
-    someText: 'TEXT',
-    ob: ['2', 2, 2],
+    numbers: ['one', 'two', 'three'],
+    rest: ['Will bi skipped']
+    // Additional data...
 }
 
-const res = Decodable(jsonData, JsonStruct, true)
-// const res = {
-//    age: 12,
-//    address: 'Address',
-//    visible: true,
-//    ob: ['2', '2', '2'],
-// }
+// Decode the data with type enforcement
+const result = decodable({data: jsonData, struct: JsonStruct});
 
-const res2 = Decodable(jsonData, JsonStruct, false)
-// const res = {
+// Output the result
+console.log(result);
+// {
 //    age: 12,
-//    address: 'Address',
+//    address: '123 Cherry Lane',
 //    visible: true,
-//    ob: ['2'],
+//    numbers: ['one', 'two', 'three'],
 // }
 ```
+```typescript
 
-### Types
+const JsonStruct = {
+    numbers: [T.string],
+}
 
-```ts
-T.string
-T.string_$ // optional
 
-T.number
-T.number_$ // optional
+const jsonData = {
+    numbers: [1, '2', '3'], //  1 will be converted to string
+}
 
-T.boolean
-T.boolean_$ // optional
+const result = decodable({
+    data: jsonData, 
+    struct: JsonStruct,
+    enableConvert: true // enable convert
+});
 
-T.undefined
-
-T.null 
-T.null_$ // optional
-
-T.object
-T.object_$ // optional
+// Output the result
+console.log(result);
+// {
+//    age: 12,
+//    address: '123 Cherry Lane',
+//    visible: true,
+//    numbers: ['1', '2', '3'], // converted to string
+// }
 ```
 
-### Api
+## API Reference
 
-```ts
-const res = Decodable(data, struct, name, enableConvert, enableThrowError)
+The main function `decodable()` is used to decode JSON data:
+
+```typescript
+const result = decodable({
+    data: { index:1 },
+    struct: { index:T.number },
+    enableConvert: false,
+    silentMode: false
+});
 ```
 
-#### data: {} | Array<any> - JsonData
+- `data: {} | Array<any>` - The JSON data to decode.
+- `struct: {} | Array<any>` - The structure that `data` should be decoded into.
+- `enableConvert: boolean` - If true, enables conversion between strings and numbers (defaults to false).
+- `silentMode: boolean` - If true, throws an error when data does not match the structure (defaults to true).
 
-#### sturct: {} | Array<any> - Structure for conversion
+## Author
 
-### name :string - method name
+- **Alex Shumihin** - Initial work and maintenance.
 
-#### enableConvert: boolean - Enables converting a string to a number or a number to a string (default = false)
-
-#### enableThrowError:boolean - Enable error throw (default = true)
-
-### Author
-
-#### ● Alex Shumihin
+For any feedback or issues, please open a GitHub issue or submit a pull request.
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
