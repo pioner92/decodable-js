@@ -1,12 +1,4 @@
 "use strict";
-// export const T = {
-//     null: null,
-//     undefined: undefined,
-//     boolean: true,
-//     number: 2,
-//     string: '',
-//     object: {},
-// };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.T = void 0;
 class T {

@@ -50,6 +50,7 @@ export const decodable = <T extends K<T>, M extends T>(
     return arr.reduce((acc, el) => {
 
         if (!(el in data) && !isOptional(struct[el]) && !silentMode) {
+            //@ts-ignore
             throw new Error(`Key "${el}" not found`)
         }
 

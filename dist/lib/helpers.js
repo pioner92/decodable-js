@@ -14,8 +14,8 @@ const isEqualTypes = (a, b) => {
 };
 exports.isEqualTypes = isEqualTypes;
 const dataValidate = (data, name) => {
-    if (!data || !exports.isType(data, 'object')) {
-        throw new Error(`${name} is not object it is type "${data === null ? 'null' : exports.getType(data)}"`);
+    if (!data || !(0, exports.isType)(data, 'object')) {
+        throw new Error(`${name} is not object it is type "${data === null ? 'null' : (0, exports.getType)(data)}"`);
     }
     else if (Object.keys(data).length === 0) {
         throw new Error(`${name} is empty`);
@@ -27,7 +27,7 @@ const createTypeString = (type) => {
 };
 exports.createTypeString = createTypeString;
 const createArrayTypeString = (type) => {
-    return `Array<${exports.createTypeString(type)}>`;
+    return `Array<${(0, exports.createTypeString)(type)}>`;
 };
 exports.createArrayTypeString = createArrayTypeString;
 const isOptional = (struct) => {

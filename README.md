@@ -96,7 +96,7 @@ const result = decodable({
 - `data: {} | Array<any>` - The JSON data to decode.
 - `struct: {} | Array<any>` - The structure that `data` should be decoded into.
 - `enableConvert: boolean` - If true, enables conversion between strings and numbers (defaults to false).
-- `silentMode: boolean` - If true, throws an error when data does not match the structure (defaults to true).
+- `silentMode: boolean` - If false, throws an error when data does not match the structure (defaults to false).
 
 ## Author
 
