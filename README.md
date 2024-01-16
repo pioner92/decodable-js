@@ -28,6 +28,7 @@ const JsonStruct = {
     address: T.string,
     visible: T.boolean,
     numbers: [T.string],
+    salary: T.number_$ // optional
     // Add more fields as required
 }
 
@@ -82,12 +83,29 @@ console.log(result);
 
 ## API Reference
 
+### Types 
+- T.number
+- T.string   
+- T.boolean 
+- T.object 
+- T.null = null
+- T.undefined 
+### Optional types (type || undefined)
+- T.number_$ 
+- T.string_$ 
+- T.boolean_$ 
+- T.null_$ 
+- T.object_$ 
+
 The main function `decodable()` is used to decode JSON data:
 
 ```typescript
 const result = decodable({
     data: { index:1 },
-    struct: { index:T.number },
+    struct: { 
+        index:T.number,
+        value: T.string_$ // optional
+    },
     enableConvert: false,
     silentMode: false
 });
